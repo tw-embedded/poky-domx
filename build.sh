@@ -15,3 +15,5 @@ echo "DISTRO_FEATURES += \" virtualization xen\"" >> conf/local.conf
 echo "BUILD_REPRODUCIBLE_BINARIES = \"1\"" >> conf/local.conf
 echo "" >> conf/local.conf
 
+bitbake fake-vp
+
