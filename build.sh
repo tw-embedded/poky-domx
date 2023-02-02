@@ -12,6 +12,9 @@ echo "MACHINE = \"fake-arm64\"" >> conf/local.conf
 echo "DISTRO = \"poky\"" >> conf/local.conf
 echo "IMAGE_FSTYPES += \"cpio.gz\"" >> conf/local.conf
 echo "DISTRO_FEATURES += \" virtualization xen systemd\"" >> conf/local.conf
+echo "DISTRO_FEATURES_BACKFILL_CONSIDERED += \"sysvinit\"" >> conf/local.conf
+echo "VIRTUAL-RUNTIME_init_manager = \"systemd\"" >> conf/local.conf
+echo "VIRTUAL-RUNTIME_initscripts = \"systemd-compat-units\"" >> conf/local.conf
 echo "BUILD_REPRODUCIBLE_BINARIES = \"1\"" >> conf/local.conf
 echo "" >> conf/local.conf
 
