@@ -658,7 +658,6 @@ FILES:${PN}-xencommons += "\
     ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/xenconsoled.service', '', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/xen-init-dom0.service', '', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/xenstored.service', '', d)} \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/var-lib-xenstored.mount', '', d)} \
     ${localstatedir} \
     "
 
@@ -733,7 +732,6 @@ SYSTEMD_SERVICE:${PN}-devd = "xendriverdomain.service"
 SYSTEMD_SERVICE:${PN}-xen-watchdog = "xen-watchdog.service"
 SYSTEMD_SERVICE:${PN}-xencommons = " \
     proc-xen.mount \
-    var-lib-xenstored.mount \
     xen-qemu-dom0-disk-backend.service \
     xenconsoled.service \
     xen-init-dom0.service \
@@ -822,7 +820,6 @@ do_install() {
         rm -f ${D}/${systemd_unitdir}/system/xenconsoled.service
         rm -f ${D}/${systemd_unitdir}/system/xen-init-dom0.service
         rm -f ${D}/${systemd_unitdir}/system/xenstored.service
-        rm -f ${D}/${systemd_unitdir}/system/var-lib-xenstored.mount
     fi
 }
 
