@@ -11,7 +11,7 @@ echo "" >> conf/local.conf
 echo "MACHINE = \"fake-arm64\"" >> conf/local.conf
 echo "DISTRO = \"poky\"" >> conf/local.conf
 echo "IMAGE_FSTYPES += \"cpio.gz\"" >> conf/local.conf
-echo "DISTRO_FEATURES += \" virtualization xen systemd\"" >> conf/local.conf
+echo "DISTRO_FEATURES += \" xen systemd\"" >> conf/local.conf
 echo "DISTRO_FEATURES_BACKFILL_CONSIDERED += \"sysvinit\"" >> conf/local.conf
 echo "VIRTUAL-RUNTIME_init_manager = \"systemd\"" >> conf/local.conf
 echo "VIRTUAL-RUNTIME_initscripts = \"systemd-compat-units\"" >> conf/local.conf
