@@ -17,6 +17,7 @@ echo "VIRTUAL-RUNTIME_init_manager = \"systemd\"" >> conf/local.conf
 echo "VIRTUAL-RUNTIME_initscripts = \"systemd-compat-units\"" >> conf/local.conf
 echo "BUILD_REPRODUCIBLE_BINARIES = \"1\"" >> conf/local.conf
 echo "EXTRA_IMAGEDEPENDS_remove += \" qemu-native\""
+echo "IMAGE_INSTALL_remove += \" qemu-native\""
 echo "" >> conf/local.conf
 
 bitbake fake-dom0
