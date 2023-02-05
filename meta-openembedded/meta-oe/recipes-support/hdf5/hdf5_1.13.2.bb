@@ -25,15 +25,6 @@ EXTRA_OECMAKE = " \
 "
 EXTRA_OECMAKE:prepend:class-target = ""
 
-gen_emu() {
-        # Write out a qemu wrapper that will be used by cmake
-        # so that it can run target helper binaries through that.
-#!/bin/sh
-EOF
-}
-
-do_unpack[postfuncs] += "gen_emu"
-
 do_install:append() {
     # Used for generating config files on target
     install -m 755 ${B}/bin/H5detect ${D}${bindir}

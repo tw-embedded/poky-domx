@@ -53,8 +53,6 @@ PACKAGECONFIG[x11_glx] = "-DDEQP_TARGET=x11_glx,,virtual/libx11,,,surfaceless wa
 PACKAGECONFIG[x11_egl_glx] = "-DDEQP_TARGET=x11_glx,,virtual/libx11 virtual/egl,,,surfaceless wayland x11_egl x11_glx"
 
 do_configure:append() {
-#!/bin/sh
-EOF
 }
 
 python __anonymous() {

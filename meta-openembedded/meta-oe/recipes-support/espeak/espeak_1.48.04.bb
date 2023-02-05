@@ -31,8 +31,6 @@ do_compile() {
     oe_runmake
 
     cd "${S}/platforms/big_endian"
-#!/bin/sh
-EOF
     sed -i '/^ *CC *=/d' Makefile
     # Fixing byte order of phoneme data files
     if [ "${SITEINFO_ENDIANNESS}" = "be" ]; then

@@ -59,19 +59,6 @@ do_configure:prepend:class-native() {
 }
 
 do_configure:prepend:class-target() {
-        # Write out a qemu wrapper that will be given to gi-scanner so that it
-        # can run target helper binaries through that.
-#!/bin/sh
-# Use a modules directory which doesn't exist so we don't load random things
-# which may then get deleted (or their dependencies) and potentially segfault
-export GIO_MODULE_DIR=${STAGING_LIBDIR}/gio/modules-dummy
-
-if [ \$? -ne 0 ]; then
-    echo "If the above error message is about missing .so libraries, then setting up GIR_EXTRA_LIBS_PATH in the recipe should help."
-    echo "(typically like this: GIR_EXTRA_LIBS_PATH=\"$""{B}/something/.libs\" )"
-    exit 1
-fi
-EOF
         # Write out a wrapper for g-ir-scanner itself, which will be used when building introspection files
         # for glib-based packages. This wrapper calls the native version of the scanner, and tells it to use
         # a qemu wrapper for running transient target binaries produced by the scanner, and an include directory

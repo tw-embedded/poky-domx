@@ -28,8 +28,6 @@ RDEPENDS:${PN} = "perl fribidi imlib2 imlib2-loaders"
 do_compile:prepend:class-target() {
     cd ${B}
     oe_runmake -C src genpref
-#!/bin/sh
-EOF
 }
 
 ALTERNATIVE:${PN} = "x-session-manager"
