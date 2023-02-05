@@ -12,8 +12,8 @@ SRC_URI[sha256sum] = "bf9a17673adffcc28ff7ea18764f06136547e97bbd9edf2ec612f09b20
 
 S = "${WORKDIR}/espeak-${PV}-source"
 
-DEPENDS = "portaudio-v19 qemu-helper-native"
-inherit siteinfo qemu
+DEPENDS = "portaudio-v19"
+inherit siteinfo
 
 
 CXXFLAGS += "-DUSE_PORTAUDIO"
@@ -31,12 +31,8 @@ do_compile() {
     oe_runmake
 
     cd "${S}/platforms/big_endian"
-    qemu_binary="${@qemu_wrapper_cmdline(d, '${STAGING_DIR_TARGET}', ['${S}/platforms/big_endian', '${STAGING_DIR_TARGET}${base_libdir}'])}"
-    cat >qemuwrapper <<EOF
 #!/bin/sh
-$qemu_binary "\$@"
 EOF
-    chmod +x qemuwrapper
     sed -i '/^ *CC *=/d' Makefile
     # Fixing byte order of phoneme data files
     if [ "${SITEINFO_ENDIANNESS}" = "be" ]; then
@@ -45,7 +41,6 @@ EOF
         sed -i 's/\(.*BYTE_ORDER\)/#undef BYTE_ORDER\n#define BYTE_ORDER LITTLE_ENDIAN\n\1/' espeak-phoneme-data.c
     fi
     oe_runmake
-    ./qemuwrapper ./espeak-phoneme-data "${S}/espeak-data" "." "${S}/espeak-data/phondata-manifest"
     cp -f phondata phonindex phontab "${S}/espeak-data"
 }
 

@@ -7,9 +7,7 @@ SECTION = "libs"
 LICENSE = "HDF5"
 LIC_FILES_CHKSUM = "file://COPYING;md5=ac1039f6bf7c9ab2b3693836f46d0735"
 
-inherit cmake siteinfo qemu
-
-DEPENDS += "qemu-native"
+inherit cmake siteinfo
 
 SRC_URI = " \
     https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.13/hdf5-${PV}/src/${BPN}-${PV}.tar.bz2 \
@@ -25,17 +23,13 @@ EXTRA_OECMAKE = " \
     -DCMAKE_INSTALL_PREFIX='${prefix}' \
     -DHDF5_INSTALL_LIB_DIR='${baselib}' \
 "
-EXTRA_OECMAKE:prepend:class-target = "-DCMAKE_CROSSCOMPILING_EMULATOR=${WORKDIR}/qemuwrapper "
+EXTRA_OECMAKE:prepend:class-target = ""
 
 gen_emu() {
         # Write out a qemu wrapper that will be used by cmake
         # so that it can run target helper binaries through that.
-        qemu_binary="${@qemu_wrapper_cmdline(d, d.getVar('STAGING_DIR_HOST'), [d.expand('${STAGING_DIR_HOST}${libdir}'),d.expand('${STAGING_DIR_HOST}${base_libdir}')])}"
-        cat > ${WORKDIR}/qemuwrapper << EOF
 #!/bin/sh
-$qemu_binary "\$@"
 EOF
-        chmod +x ${WORKDIR}/qemuwrapper
 }
 
 do_unpack[postfuncs] += "gen_emu"

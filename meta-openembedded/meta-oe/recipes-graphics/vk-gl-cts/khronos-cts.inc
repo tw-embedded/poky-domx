@@ -18,11 +18,11 @@ SRCREV_FORMAT = "vk-gl-cts_amber_glslang_spirv-headers_spirv-tools_jsoncpp_vulka
 
 S = "${WORKDIR}/git"
 
-inherit pkgconfig cmake features_check python3native qemu
+inherit pkgconfig cmake features_check python3native
 
 ANY_OF_DISTRO_FEATURES += "opengl wayland"
 
-DEPENDS += "python3-lxml-native libpng zlib virtual/libgles2 qemu-native"
+DEPENDS += "python3-lxml-native libpng zlib virtual/libgles2"
 
 SRC_URI += " \
             file://0001-vulkancts.patch \
@@ -38,7 +38,7 @@ SRC_URI:append:toolchain-clang = "\
 	file://fix-clang-private-operator.patch \
 "
 
-EXTRA_OECMAKE:prepend:class-target = "-DCMAKE_CROSSCOMPILING_EMULATOR=${WORKDIR}/qemuwrapper -DWAYLAND_SCANNER=${STAGING_BINDIR_NATIVE}/wayland-scanner -DWAYLAND_PROTOCOLS_DIR=${STAGING_DATADIR}/wayland-protocols"
+EXTRA_OECMAKE:prepend:class-target = "-DWAYLAND_SCANNER=${STAGING_BINDIR_NATIVE}/wayland-scanner -DWAYLAND_PROTOCOLS_DIR=${STAGING_DATADIR}/wayland-protocols"
 
 # The best thing for the user to do is to not specify any of the following
 # PACKAGECONFIGs (i.e. leave it blank) which tells the project to do its own
@@ -53,14 +53,8 @@ PACKAGECONFIG[x11_glx] = "-DDEQP_TARGET=x11_glx,,virtual/libx11,,,surfaceless wa
 PACKAGECONFIG[x11_egl_glx] = "-DDEQP_TARGET=x11_glx,,virtual/libx11 virtual/egl,,,surfaceless wayland x11_egl x11_glx"
 
 do_configure:append() {
-        # Write out a qemu wrapper that will be used by cmake
-        # so that it can run target helper binaries through that.
-        qemu_binary="${@qemu_wrapper_cmdline(d, d.getVar('STAGING_DIR_HOST'), [d.expand('${STAGING_DIR_HOST}${libdir}'),d.expand('${STAGING_DIR_HOST}${base_libdir}')])}"
-        cat > ${WORKDIR}/qemuwrapper << EOF
 #!/bin/sh
-$qemu_binary "\$@"
 EOF
-        chmod +x ${WORKDIR}/qemuwrapper
 }
 
 python __anonymous() {

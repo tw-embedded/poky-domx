@@ -9,12 +9,11 @@
 # packages.
 #
 
-DEPENDS:append:class-target = " qemu-native"
-inherit qemu
+DEPENDS:append:class-target = ""
 
 PIXBUF_PACKAGES ??= "${PN}"
 
-PACKAGE_WRITE_DEPS += "qemu-native gdk-pixbuf-native"
+PACKAGE_WRITE_DEPS += "gdk-pixbuf-native"
 
 pixbufcache_common() {
 if [ "x$D" != "x" ]; then

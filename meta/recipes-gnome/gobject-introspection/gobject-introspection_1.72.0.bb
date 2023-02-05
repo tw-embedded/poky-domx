@@ -21,7 +21,7 @@ SRC_URI[sha256sum] = "02fe8e590861d88f83060dd39cda5ccaa60b2da1d21d0f95499301b186
 
 SRC_URI:append:class-native = " file://0001-Relocate-the-repository-directory-for-native-builds.patch"
 
-inherit meson pkgconfig gtk-doc python3native qemu gobject-introspection-data upstream-version-is-even multilib_script
+inherit meson pkgconfig gtk-doc python3native gobject-introspection-data upstream-version-is-even multilib_script
 
 GTKDOC_MESON_OPTION = "gtk_doc"
 
@@ -32,7 +32,7 @@ DEPENDS += " libffi zlib glib-2.0 python3 flex-native bison-native autoconf-arch
 # target build needs qemu to run temporary introspection binaries created
 # on the fly by g-ir-scanner and a native version of itself to run
 # native versions of its own tools during build.
-DEPENDS:append:class-target = " gobject-introspection-native qemu-native"
+DEPENDS:append:class-target = " gobject-introspection-native"
 
 # needed for writing out the qemu wrapper script
 export STAGING_DIR_HOST
@@ -45,7 +45,6 @@ PACKAGECONFIG[doctool] = "-Ddoctool=enabled,-Ddoctool=disabled,python3-mako,"
 # and optionally to generate introspection data
 EXTRA_OEMESON:class-target = " \
     -Dgi_cross_use_prebuilt_gi=true \
-    -Dgi_cross_binary_wrapper=${B}/g-ir-scanner-qemuwrapper \
     -Dgi_cross_ldd_wrapper=${B}/g-ir-scanner-lddwrapper \
     -Dgi_cross_pkgconfig_sysroot_path=${PKG_CONFIG_SYSROOT_DIR} \
     ${@bb.utils.contains('GI_DATA_ENABLED', 'True', '-Dbuild_introspection_data=true', '-Dbuild_introspection_data=false', d)} \
@@ -62,22 +61,17 @@ do_configure:prepend:class-native() {
 do_configure:prepend:class-target() {
         # Write out a qemu wrapper that will be given to gi-scanner so that it
         # can run target helper binaries through that.
-        qemu_binary="${@qemu_wrapper_cmdline(d, '$STAGING_DIR_HOST', ['\\$GIR_EXTRA_LIBS_PATH','.libs','$STAGING_DIR_HOST/${libdir}','$STAGING_DIR_HOST/${base_libdir}'])}"
-        cat > ${B}/g-ir-scanner-qemuwrapper << EOF
 #!/bin/sh
 # Use a modules directory which doesn't exist so we don't load random things
 # which may then get deleted (or their dependencies) and potentially segfault
 export GIO_MODULE_DIR=${STAGING_LIBDIR}/gio/modules-dummy
 
-$qemu_binary "\$@"
 if [ \$? -ne 0 ]; then
     echo "If the above error message is about missing .so libraries, then setting up GIR_EXTRA_LIBS_PATH in the recipe should help."
     echo "(typically like this: GIR_EXTRA_LIBS_PATH=\"$""{B}/something/.libs\" )"
     exit 1
 fi
 EOF
-        chmod +x ${B}/g-ir-scanner-qemuwrapper
-
         # Write out a wrapper for g-ir-scanner itself, which will be used when building introspection files
         # for glib-based packages. This wrapper calls the native version of the scanner, and tells it to use
         # a qemu wrapper for running transient target binaries produced by the scanner, and an include directory
@@ -87,7 +81,7 @@ EOF
 # This prevents g-ir-scanner from writing cache data to user's HOME dir
 export GI_SCANNER_DISABLE_CACHE=1
 
-g-ir-scanner --lib-dirs-envvar=GIR_EXTRA_LIBS_PATH --use-binary-wrapper=${STAGING_BINDIR}/g-ir-scanner-qemuwrapper --use-ldd-wrapper=${STAGING_BINDIR}/g-ir-scanner-lddwrapper --add-include-path=${STAGING_DATADIR}/gir-1.0 --add-include-path=${STAGING_LIBDIR}/gir-1.0 "\$@"
+g-ir-scanner --lib-dirs-envvar=GIR_EXTRA_LIBS_PATH --use-ldd-wrapper=${STAGING_BINDIR}/g-ir-scanner-lddwrapper --add-include-path=${STAGING_DATADIR}/gir-1.0 --add-include-path=${STAGING_LIBDIR}/gir-1.0 "\$@"
 EOF
         chmod +x ${B}/g-ir-scanner-wrapper
 
@@ -95,7 +89,6 @@ EOF
         # g-ir-compiler writes out the raw content of a C struct to disk, and therefore is architecture dependent.
         cat > ${B}/g-ir-compiler-wrapper << EOF
 #!/bin/sh
-${STAGING_BINDIR}/g-ir-scanner-qemuwrapper ${STAGING_BINDIR}/g-ir-compiler "\$@"
 EOF
         chmod +x ${B}/g-ir-compiler-wrapper
 
@@ -126,7 +119,6 @@ do_install:prepend() {
 # to build introspection files for all other gobject-based packages
 do_install:append:class-target() {
         install -d ${D}${bindir}/
-        install ${B}/g-ir-scanner-qemuwrapper ${D}${bindir}/
         install ${B}/g-ir-scanner-wrapper ${D}${bindir}/
         install ${B}/g-ir-compiler-wrapper ${D}${bindir}/
         install ${B}/g-ir-scanner-lddwrapper ${D}${bindir}/
@@ -160,13 +152,12 @@ gi_ldsoconf_sysroot_preprocess () {
 # Remove wrapper files from the package, only used for cross-compiling
 PACKAGE_PREPROCESS_FUNCS += "gi_package_preprocess"
 gi_package_preprocess() {
-	rm -f ${PKGD}${bindir}/g-ir-scanner-qemuwrapper
 	rm -f ${PKGD}${bindir}/g-ir-scanner-wrapper
 	rm -f ${PKGD}${bindir}/g-ir-compiler-wrapper
 	rm -f ${PKGD}${bindir}/g-ir-scanner-lddwrapper
 }
 
-SSTATE_SCAN_FILES += "g-ir-scanner-qemuwrapper g-ir-scanner-wrapper g-ir-compiler-wrapper g-ir-scanner-lddwrapper Gio-2.0.gir postinst-ldsoconf-${PN}"
+SSTATE_SCAN_FILES += "g-ir-scanner-wrapper g-ir-compiler-wrapper g-ir-scanner-lddwrapper Gio-2.0.gir postinst-ldsoconf-${PN}"
 
 # .typelib files are needed at runtime and so they go to the main package
 FILES:${PN}:append = " ${libdir}/girepository-*/*.typelib"

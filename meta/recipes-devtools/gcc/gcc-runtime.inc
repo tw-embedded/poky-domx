@@ -282,8 +282,6 @@ MAKE_CHECK_RUNTESTFLAGS ??= "${MAKE_CHECK_BOARDARGS} --ignore '${MAKE_CHECK_IGNO
 # specific host and target dependencies required for test suite running
 do_check[depends] += "dejagnu-native:do_populate_sysroot expect-native:do_populate_sysroot"
 do_check[depends] += "virtual/libc:do_populate_sysroot"
-# only depend on qemu if targeting linux user execution
-do_check[depends] += "${@'qemu-native:do_populate_sysroot' if "user" in d.getVar('TOOLCHAIN_TEST_TARGET') else ''}"
 # extend the recipe sysroot to include the built libraries (for qemu usermode)
 do_check[prefuncs] += "extend_recipe_sysroot"
 do_check[prefuncs] += "check_prepare"
