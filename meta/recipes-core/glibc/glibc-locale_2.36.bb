@@ -1,3 +1,4 @@
 require glibc-locale.inc
 
-FILES_${PN} += "${libdir}/*"
+FILES_${PN} = "/usr/lib/locale"
+
