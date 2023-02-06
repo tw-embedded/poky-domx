@@ -1,4 +1,4 @@
-FILES_${PN} = "/usr/lib/locale"
+FILES:${PN} += " /usr/lib/locale/*"
 
 require glibc-locale.inc
 
