@@ -77,6 +77,8 @@ do_configure() {
     echo 'Checking uname release type: "${OLDEST_KERNEL}"' >> ${CROSS_ANSWERS}
     cat ${WAF_CROSS_ANSWERS_PATH}/cross-answers-${TARGET_ARCH}.txt >> ${CROSS_ANSWERS}
 
+    CROSS_EXEC="-L ${STAGING_DIR_HOST}"
+
     export BUILD_ARCH=${BUILD_ARCH}
     export HOST_ARCH=${HOST_ARCH}
     export STAGING_LIBDIR=${STAGING_LIBDIR}
