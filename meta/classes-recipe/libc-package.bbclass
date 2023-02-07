@@ -279,6 +279,17 @@ python package_do_split_gconvs () {
 
             cmd = "PATH=\"%s\" I18NPATH=\"%s\" GCONV_PATH=\"%s\" cross-localedef %s" % \
                 (path, i18npath, gconvpath, localedef_opts)
+        else:
+            localedef_opts = "--force --no-hard-links --no-archive --prefix=%s \
+                 --inputfile=%s/i18n/locales/%s --charmap=%s %s" \
+                 % (treedir, datadir, locale, encoding, name)
+
+            cmd = "PSEUDO_RELOADED=YES PATH=\"%s\" I18NPATH=\"%s\" %s -L %s \
+                 -E LD_LIBRARY_PATH=%s %s %s${base_bindir}/localedef %s" % \
+                 (path, i18npath, qemu, treedir, ldlibdir, qemu_options, treedir, localedef_opts)
+
+        commands["%s/%s" % (outputpath, name)] = cmd
+
         bb.note("generating locale %s (%s)" % (locale, encoding))
 
     def output_locale(name, locale, encoding):
