@@ -21,4 +21,4 @@ esac
 
 rm -f $D${UDEVLIBDIR}/udev/hwdb.bin
 PSEUDO_UNLOAD=1
-chown root:root $D${UDEVLIBDIR}/udev/hwdb.bin
+#chown root:root $D${UDEVLIBDIR}/udev/hwdb.bin
