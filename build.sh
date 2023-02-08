@@ -7,19 +7,21 @@ bitbake-layers add-layer ../meta-openembedded/meta-python
 bitbake-layers add-layer ../meta-openembedded/meta-networking
 bitbake-layers add-layer ../meta-virtualization
 
-echo "" >> conf/local.conf
-echo "MACHINE = \"fake-arm64\"" >> conf/local.conf
-echo "DISTRO = \"poky\"" >> conf/local.conf
-echo "IMAGE_FSTYPES += \"cpio.gz\"" >> conf/local.conf
-echo "DISTRO_FEATURES += \" virtualization xen systemd\"" >> conf/local.conf
-echo "DISTRO_FEATURES_BACKFILL_CONSIDERED += \"sysvinit\"" >> conf/local.conf
-echo "VIRTUAL-RUNTIME_init_manager = \"systemd\"" >> conf/local.conf
-echo "VIRTUAL-RUNTIME_initscripts = \"systemd-compat-units\"" >> conf/local.conf
-echo "BUILD_REPRODUCIBLE_BINARIES = \"1\"" >> conf/local.conf
+sed -i '/appended by alix/,$d' conf/local.conf
 
-echo "EXTRA_IMAGEDEPENDS:remove = \" qemu-native\"" >> conf/local.conf
-echo "IMAGE_INSTALL:remove = \" qemu-native\"" >> conf/local.conf
-echo "" >> conf/local.conf
+cat >> conf/local.conf << EOF
+#### appended by alix ####
+MACHINE = "fake-arm64"
+DISTRO = "poky"
+IMAGE_FSTYPES += "cpio.gz"
+DISTRO_FEATURES += " virtualization xen systemd"
+DISTRO_FEATURES_BACKFILL_CONSIDERED += "sysvinit"
+VIRTUAL-RUNTIME_init_manager = "systemd"
+VIRTUAL-RUNTIME_initscripts = "systemd-compat-units"
+BUILD_REPRODUCIBLE_BINARIES = "1"
+#EXTRA_IMAGEDEPENDS:remove = " qemu-native"
+#IMAGE_INSTALL:remove = " qemu-native"
+EOF
 
 bitbake fake-dom0
 
