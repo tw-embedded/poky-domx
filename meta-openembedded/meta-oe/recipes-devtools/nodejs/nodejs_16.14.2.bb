@@ -4,10 +4,10 @@ LICENSE = "MIT & ISC & BSD-2-Clause & BSD-3-Clause & Artistic-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=6ba5b21ac7a505195ca69344d3d7a94a"
 
 DEPENDS = "openssl"
-DEPENDS:append:class-target = " qemu-native"
+DEPENDS:append:class-target = ""
 DEPENDS:append:class-native = " c-ares-native"
 
-inherit pkgconfig python3native qemu
+inherit pkgconfig python3native
 
 COMPATIBLE_MACHINE:armv4 = "(!.*armv4).*"
 COMPATIBLE_MACHINE:armv5 = "(!.*armv5).*"
@@ -104,35 +104,6 @@ python do_unpack() {
         shutil.rmtree(d.getVar('S') + '/deps/zlib', True)
 }
 
-# V8's JIT infrastructure requires binaries such as mksnapshot and
-# mkpeephole to be run in the host during the build. However, these
-# binaries must have the same bit-width as the target (e.g. a x86_64
-# host targeting ARMv6 needs to produce a 32-bit binary). Instead of
-# depending on a third Yocto toolchain, we just build those binaries
-# for the target and run them on the host with QEMU.
-python do_create_v8_qemu_wrapper () {
-    """Creates a small wrapper that invokes QEMU to run some target V8 binaries
-    on the host."""
-    qemu_libdirs = [d.expand('${STAGING_DIR_HOST}${libdir}'),
-                    d.expand('${STAGING_DIR_HOST}${base_libdir}')]
-    qemu_cmd = qemu_wrapper_cmdline(d, d.getVar('STAGING_DIR_HOST', True),
-                                    qemu_libdirs)
-    wrapper_path = d.expand('${B}/v8-qemu-wrapper.sh')
-    with open(wrapper_path, 'w') as wrapper_file:
-        wrapper_file.write("""#!/bin/sh
-
-# This file has been generated automatically.
-# It invokes QEMU to run binaries built for the target in the host during the
-# build process.
-
-%s "$@"
-""" % qemu_cmd)
-    os.chmod(wrapper_path, 0o755)
-}
-
-do_create_v8_qemu_wrapper[dirs] = "${B}"
-addtask create_v8_qemu_wrapper after do_configure before do_compile
-
 LDFLAGS:append:x86 = " -latomic"
 
 # Node is way too cool to use proper autotools, so we install two wrappers to forcefully inject proper arch cflags to workaround gypi
@@ -153,7 +124,6 @@ do_configure () {
 
 do_compile () {
     export LD="${CXX}"
-    install -D ${B}/v8-qemu-wrapper.sh ${B}/out/Release/v8-qemu-wrapper.sh
     oe_runmake BUILDTYPE=Release
 }
 

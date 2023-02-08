@@ -1,4 +1,3 @@
-inherit qemu
 
 TOOLCHAIN_TEST_TARGET ??= "user"
 TOOLCHAIN_TEST_HOST ??= "localhost"
@@ -34,46 +33,6 @@ python () {
 }
 
 python check_prepare() {
-    def generate_qemu_linux_user_config(d):
-        content = []
-        content.append('load_generic_config "sim"')
-        content.append('load_base_board_description "basic-sim"')
-        content.append('process_multilib_options ""')
-
-        # qemu args
-        qemu_binary = qemu_target_binary(d)
-        if not qemu_binary:
-            bb.fatal("Missing target qemu linux-user binary")
-
-        args = []
-        # QEMU_OPTIONS is not always valid due to -cross recipe
-        args += ["-r", d.getVar("OLDEST_KERNEL")]
-        # enable all valid instructions, since the test suite itself does not
-        # limit itself to the target cpu options.
-        #   - valid for x86*, powerpc, arm, arm64
-        if qemu_binary.lstrip("qemu-") in ["x86_64", "i386", "ppc", "arm", "aarch64"]:
-            args += ["-cpu", "max"]
-
-        sysroot = d.getVar("RECIPE_SYSROOT")
-        args += ["-L", sysroot]
-        # lib paths are static here instead of using $libdir since this is used by a -cross recipe
-        libpaths = [sysroot + "/usr/lib", sysroot + "/lib"]
-        args += ["-E", "LD_LIBRARY_PATH={0}".format(":".join(libpaths))]
-
-        content.append('set_board_info is_simulator 1')
-        content.append('set_board_info sim "{0}"'.format(qemu_binary))
-        content.append('set_board_info sim,options "{0}"'.format(" ".join(args)))
-
-        # target build/test config
-        content.append('set_board_info target_install {%s}' % d.getVar("TARGET_SYS"))
-        content.append('set_board_info ldscript ""')
-        #content.append('set_board_info needs_status_wrapper 1') # qemu-linux-user return codes work, and abort works fine
-        content.append('set_board_info gcc,stack_size 16834')
-        content.append('set_board_info gdb,nosignals 1')
-        content.append('set_board_info gcc,timeout 60')
-
-        return "\n".join(content)
-
     def generate_remote_ssh_linux_config(d):
         content = []
         content.append('load_generic_config "unix"')
@@ -90,10 +49,6 @@ python check_prepare() {
     dejagnudir = d.expand("${WORKDIR}/dejagnu")
     if not os.path.isdir(dejagnudir):
         os.makedirs(dejagnudir)
-
-    # write out target qemu board config
-    with open(os.path.join(dejagnudir, "user.exp"), "w") as f:
-        f.write(generate_qemu_linux_user_config(d))
 
     # write out target ssh board config
     with open(os.path.join(dejagnudir, "ssh.exp"), "w") as f:

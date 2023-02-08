@@ -39,7 +39,7 @@ python __anonymous () {
                 if use_cross_localedef == "1" :
                     depends = "%s cross-localedef-native" % depends
                 else:
-                    depends = "%s qemu-native" % depends
+                    depends = "%s" % depends
                 d.setVar("DEPENDS", depends)
                 d.setVar("GLIBC_INTERNAL_USE_BINARY_LOCALE", "compile")
                 break
@@ -92,8 +92,6 @@ do_collect_bins_from_locale_tree() {
 	# Finalize tree by chaning all duplicate files into hard links
 	cross-localedef-hardlink -c -v ${WORKDIR}/locale-tree
 }
-
-inherit qemu
 
 python package_do_split_gconvs () {
     import re
@@ -281,17 +279,14 @@ python package_do_split_gconvs () {
 
             cmd = "PATH=\"%s\" I18NPATH=\"%s\" GCONV_PATH=\"%s\" cross-localedef %s" % \
                 (path, i18npath, gconvpath, localedef_opts)
-        else: # earlier slower qemu way 
-            qemu = qemu_target_binary(d) 
+        else:
             localedef_opts = "--force --no-hard-links --no-archive --prefix=%s \
-                --inputfile=%s/i18n/locales/%s --charmap=%s %s" \
-                % (treedir, datadir, locale, encoding, name)
-
-            qemu_options = d.getVar('QEMU_OPTIONS')
+                 --inputfile=%s/i18n/locales/%s --charmap=%s %s" \
+                 % (treedir, datadir, locale, encoding, name)
 
             cmd = "PSEUDO_RELOADED=YES PATH=\"%s\" I18NPATH=\"%s\" %s -L %s \
-                -E LD_LIBRARY_PATH=%s %s %s${base_bindir}/localedef %s" % \
-                (path, i18npath, qemu, treedir, ldlibdir, qemu_options, treedir, localedef_opts)
+                 -E LD_LIBRARY_PATH=%s %s %s${base_bindir}/localedef %s" % \
+                 (path, i18npath, qemu, treedir, ldlibdir, qemu_options, treedir, localedef_opts)
 
         commands["%s/%s" % (outputpath, name)] = cmd
 

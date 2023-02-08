@@ -1,9 +1,9 @@
 # waf is a build system which is used by samba related project.
 # Obtain details from https://wiki.samba.org/index.php/Waf
 #
-inherit qemu python3native
+inherit python3native
 
-DEPENDS += "qemu-native libxslt-native docbook-xsl-stylesheets-native python3"
+DEPENDS += "libxslt-native docbook-xsl-stylesheets-native python3"
 
 CONFIGUREOPTS = " --prefix=${prefix} \
                   --bindir=${bindir} \
@@ -77,18 +77,7 @@ do_configure() {
     echo 'Checking uname release type: "${OLDEST_KERNEL}"' >> ${CROSS_ANSWERS}
     cat ${WAF_CROSS_ANSWERS_PATH}/cross-answers-${TARGET_ARCH}.txt >> ${CROSS_ANSWERS}
 
-    qemu_binary="${@qemu_target_binary(d)}"
-    if [ "${qemu_binary}" = "qemu-allarch" ]; then
-        qemu_binary="qemuwrapper"
-    fi
-
-    libdir_qemu="${STAGING_DIR_HOST}/${libdir}"
-    base_libdir_qemu="${STAGING_DIR_HOST}/${base_libdir}"
-
-    CROSS_EXEC="${qemu_binary} \
-                ${QEMU_OPTIONS} \
-                -L ${STAGING_DIR_HOST} \
-                -E LD_LIBRARY_PATH=${libdir_qemu}:${base_libdir_qemu}"
+    CROSS_EXEC="-L ${STAGING_DIR_HOST}"
 
     export BUILD_ARCH=${BUILD_ARCH}
     export HOST_ARCH=${HOST_ARCH}

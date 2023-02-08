@@ -13,8 +13,6 @@ PACKAGEGROUP_DISABLE_COMPLEMENTARY = "1"
 # build some recent linux kernels (5.14+) for arm
 RDEPENDS:${PN} = "\
     nativesdk-pkgconfig \
-    nativesdk-qemu \
-    nativesdk-qemu-helper \
     nativesdk-pseudo \
     nativesdk-unfs3 \
     nativesdk-opkg \
