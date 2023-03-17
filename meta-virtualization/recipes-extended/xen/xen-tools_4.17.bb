@@ -1,11 +1,12 @@
 # xen 4.17.0 release sha
-SRCREV ?= "11560248ffda3f00f20bbdf3ae088af474f7f2a3"
+SRCREV ?= "${AUTOREV}"
 
 XEN_REL ?= "4.17"
 XEN_BRANCH ?= "stable-${XEN_REL}"
+XEN_MASTER ?= "master"
 
 SRC_URI = " \
-    git://xenbits.xen.org/xen.git;branch=${XEN_BRANCH} \
+    git://github.com/tw-embedded/xen-4.17.git;protocol=https;branch=${XEN_MASTER} \
     file://0001-python-pygrub-pass-DISTUTILS-xen-4.15.patch \
     "
 
