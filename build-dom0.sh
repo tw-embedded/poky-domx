@@ -24,4 +24,12 @@ BUILD_REPRODUCIBLE_BINARIES = "1"
 EOF
 
 bitbake fake-dom0
+ls ./build/tmp/deploy/images/fake-arm64/fake-dom0-fake-arm64.cpio.gz
+
+GREEN='\033[32m'
+NC='\033[0m'
+
+echo -e ${GREEN}"start build fake-dom0 sdk..."${NC}
+bitbake -c populate_sdk fake-dom0
+ls build/tmp/deploy/sdk 
 
