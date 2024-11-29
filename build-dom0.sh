@@ -31,5 +31,7 @@ NC='\033[0m'
 
 echo -e ${GREEN}"start build fake-dom0 sdk..."${NC}
 bitbake -c populate_sdk fake-dom0
-ls build/tmp/deploy/sdk 
+ls build/tmp/deploy/sdk
+# ./sdk/poky-glibc-x86_64-fake-dom0-cortexa57-fake-arm64-toolchain-4.1.2.sh
+# . /opt/poky/4.1.2/environment-setup-cortexa57-poky-linux
 
