@@ -23,3 +23,6 @@ EOF
 
 bitbake baize-domu
 
+#bitbake -c populate_sdk baize-domu
+#tmp/deploy/sdk/poky-glibc-x86_64-baize-domu-cortexa57-fake-arm64-toolchain-4.1.2.sh
+
