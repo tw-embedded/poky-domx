@@ -24,6 +24,6 @@ EOF
 bitbake baize-domu
 
 #bitbake -c populate_sdk baize-domu
-#tmp/work/fake_arm64-poky-linux/baize-domu/1.0-r0/deploy-baize-domu-image-complete/baize-domu-fake-arm64.cpio.gz
+#tmp/depoly/images/fake-arm64/baize-domu-fake-arm64.cpio.gz
 #tmp/deploy/sdk/poky-glibc-x86_64-baize-domu-cortexa57-fake-arm64-toolchain-4.1.2.sh
 
