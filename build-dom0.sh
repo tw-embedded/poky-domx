@@ -1,6 +1,8 @@
 
 source ./oe-init-build-env
 
+# apt install python3-passlib 
+
 bitbake-layers add-layer ../meta-openembedded/meta-oe
 bitbake-layers add-layer ../meta-openembedded/meta-filesystems
 bitbake-layers add-layer ../meta-openembedded/meta-python

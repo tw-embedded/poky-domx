@@ -15,6 +15,10 @@ SRCBRANCH ?= "develop"
 
 SRC_URI += "file://fix_cflags_handling.patch"
 
+# fix for ubuntu 24.04
+SRC_URI += "file://fix_configure_failed.patch \
+            file://fix_gen_failed.patch "
+
 PROVIDES = "virtual/crypt"
 
 FILES:${PN} = "${libdir}/libcrypt*.so.* \
