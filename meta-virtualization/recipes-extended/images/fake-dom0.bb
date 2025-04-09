@@ -12,6 +12,7 @@ IMAGE_INSTALL += " \
     packagegroup-core-boot \
     packagegroup-core-ssh-openssh \
     xen-tools \
+    optee-supplicant \
     "
 
 # The hypervisor may not be within the dom0 filesystem image but at least
