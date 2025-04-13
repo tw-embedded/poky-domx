@@ -1,7 +1,8 @@
 
 source ./oe-init-build-env
 
-# apt install python3-passlib 
+# for 24.04, sudo apparmor_parser -R /etc/apparmor.d/unprivileged_userns
+# sudo apt install python3-passlib 
 
 bitbake-layers add-layer ../meta-openembedded/meta-oe
 bitbake-layers add-layer ../meta-openembedded/meta-filesystems

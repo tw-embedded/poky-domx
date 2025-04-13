@@ -23,6 +23,9 @@ do_build[depends] += "xen:do_deploy"
 IMAGE_INSTALL:append:x86    = " kernel-module-tun"
 IMAGE_INSTALL:append:x86-64 = " kernel-module-tun"
 
+inherit populate_sdk
+TOOLCHAIN_HOST_TASK:append = " nativesdk-python3-cryptography"
+
 # Linux kernel option CONFIG_XEN_PCIDEV_BACKEND depends on X86
 XEN_PCIBACK_MODULE = ""
 XEN_PCIBACK_MODULE:x86    = "kernel-module-xen-pciback"

@@ -4,7 +4,8 @@ HOMEPAGE = "http://www.rust-lang.org"
 
 SRC_URI += "file://0002-llvm-allow-env-override-of-exe-path.patch;striplevel=2 \
             file://0001-AsmMatcherEmitter-sort-ClassInfo-lists-by-name-as-we.patch;striplevel=2 \
-	    file://0003-llvm-fix-include-benchmarks.patch;striplevel=2"
+	    file://0003-llvm-fix-include-benchmarks.patch;striplevel=2 \
+            file://0004-fix-uintptr_t-not-declared.patch;striplevel=2"
 
 S = "${RUSTSRC}/src/llvm-project/llvm"
 
