@@ -1,0 +1,15 @@
+[Unit]
+Description=Load All Precompiled AppArmor Binary Policy Caches
+DefaultDependencies=no
+After=sys-kernel-security.mount local-fs.target
+Wants=sys-kernel-security.mount
+Before=basic.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/libexec/load-apparmor-cache.sh
+
+[Install]
+WantedBy=sysinit.target
+

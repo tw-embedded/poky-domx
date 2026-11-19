@@ -13,6 +13,7 @@ IMAGE_INSTALL += " \
     packagegroup-core-ssh-openssh \
     xen-tools \
     optee-supplicant \
+    apparmor \
     "
 
 # The hypervisor may not be within the dom0 filesystem image but at least
