@@ -14,6 +14,7 @@ IMAGE_INSTALL += " \
     xen-tools \
     optee-supplicant \
     apparmor \
+    cryptsetup \
     "
 
 # The hypervisor may not be within the dom0 filesystem image but at least
