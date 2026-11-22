@@ -9,7 +9,7 @@ bitbake-layers add-layer ../meta-openembedded/meta-filesystems
 bitbake-layers add-layer ../meta-openembedded/meta-python
 bitbake-layers add-layer ../meta-openembedded/meta-networking
 bitbake-layers add-layer ../meta-virtualization
-bitbake-layers add-layer ../meta-tee
+bitbake-layers add-layer ../meta-security
 
 sed -i '/appended by alix/,$d' conf/local.conf
 

@@ -15,6 +15,7 @@ IMAGE_INSTALL += " \
     optee-supplicant \
     apparmor \
     cryptsetup \
+    overlay-fs \
     "
 
 # The hypervisor may not be within the dom0 filesystem image but at least

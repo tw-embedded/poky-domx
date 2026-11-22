@@ -172,6 +172,26 @@ do_install:append:linuxstdbase() {
         done
 }
 
+# added for overlayfs
+do_install:append () {
+    # / ro
+    sed -i -E 's@^(/dev/root[[:space:]]+/[[:space:]]+[^[:space:]]+[[:space:]]+)defaults\b@\1ro@' ${D}${sysconfdir}/fstab
+
+    # add overlay and folder
+    install -m 0755 -d ${D}/mnt/overlay
+    install -m 0755 -d ${D}/opt
+    install -m 0755 -d ${D}/root
+    cat << 'EOF' >> ${D}${sysconfdir}/fstab
+
+LABEL=overlay   /mnt/overlay   ext4     defaults,noatime                                                             0  2
+#overlay         /etc           overlay  lowerdir=/etc,upperdir=/mnt/overlay/etc/upper,workdir=/mnt/overlay/etc/work   0  0
+#overlay         /var           overlay  lowerdir=/var,upperdir=/mnt/overlay/var/upper,workdir=/mnt/overlay/var/work   0  0
+#overlay         /home          overlay  lowerdir=/home,upperdir=/mnt/overlay/home/upper,workdir=/mnt/overlay/home/work  0  0
+#overlay         /root          overlay  lowerdir=/root,upperdir=/mnt/overlay/root/upper,workdir=/mnt/overlay/root/work  0  0
+#overlay         /opt           overlay  lowerdir=/opt,upperdir=/mnt/overlay/opt/upper,workdir=/mnt/overlay/opt/work    0  0
+EOF
+}
+
 SYSROOT_DIRS += "${sysconfdir}/skel"
 
 PACKAGES = "${PN}-doc ${PN} ${PN}-dev ${PN}-dbg"

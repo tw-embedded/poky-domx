@@ -1,0 +1,14 @@
+[Unit]
+Description=Mount OverlayFS for var, home, root, and opt
+DefaultDependencies=no
+After=mnt-overlay.mount
+Requires=mnt-overlay.mount
+Before=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/mount-overlays.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=local-fs.target
